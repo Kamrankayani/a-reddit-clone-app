@@ -10,8 +10,10 @@ pipeline {
         RELEASE = "1.0.0"
         DOCKER_USER = "kamrandevops23"
         DOCKER_PASS = "dockerhub"
-        IMAGE_NAME = "$(DOCKER_USER)" + "/" + "$(APP_NAME)"
-        IMAGE_TAG = "$(RELEASE)-$(BUILD_NUMBER)"
+       # IMAGE_NAME = "$(DOCKER_USER)" + "/" + "$(APP_NAME)"
+       # IMAGE_TAG = "$(RELEASE)-$(BUILD_NUMBER)"
+        IMAGE_NAME = "${DOCKER_USER}/${APP_NAME}"  // Correct interpolation
+        IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"  // Correct interpolation
     }
     stages {
         stage('Clean Workspace') {
@@ -48,5 +50,18 @@ pipeline {
                 sh "trivy fs . > trivyfs.txt"
             }
         }
+        stage("Build & Push Docker Image") {
+    steps {
+        script {
+            docker.withRegistry('', DOCKER_PASS) {
+                def dockerImage = docker.build("${IMAGE_NAME}:${IMAGE_TAG}")  // Build Image
+                
+                dockerImage.push("${IMAGE_TAG}")  // Push with version
+                dockerImage.push("latest")  // Push latest tag
+            }
+        }
+    }
+}
+
     }
 }
