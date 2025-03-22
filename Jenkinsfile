@@ -52,7 +52,7 @@ pipeline {
         stage("Build & Push Docker Image") {
     steps {
         script {
-            docker.withRegistry('', DOCKER_PASS) {
+            docker.withRegistry('https://index.docker.io/v1/', DOCKER_PASS) {
                 def dockerImage = docker.build("${IMAGE_NAME}:${IMAGE_TAG}")  // Build Image
                 
                 dockerImage.push("${IMAGE_TAG}")  // Push with version
