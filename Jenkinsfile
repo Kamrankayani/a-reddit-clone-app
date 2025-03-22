@@ -6,6 +6,12 @@ pipeline {
     }
     environment {
         SCANNER_HOME = tool 'sonar-scanner'
+        APP_NAME = "Reddit-Clone-app"
+        RELEASE = "1.0.0"
+        DOCKER_USER = "kamrandevops23"
+        DOCKER_PASS = "dockerhub"
+        IMAGE_NAME = "$(DOCKER_USER)" + "/" + "$(APP_NAME)"
+        IMAGE_TAG = "$(RELEASE)-$(BUILD_NUMBER)"
     }
     stages {
         stage('Clean Workspace') {
